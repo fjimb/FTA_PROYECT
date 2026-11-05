@@ -1,0 +1,13 @@
+spring:
+  application:
+   name: forum
+  datasource:
+   url: jdbc:postgresql://localhost:5432/forum
+   username: forum
+   password: forum
+  jpa:
+   hibernate:
+    ddl-auto: update
+   show-sql: true
+   open-in-view: false	 
+#en caso de que explote revisar las ultimas 2 lineas y su espacio
