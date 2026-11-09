@@ -1,6 +1,5 @@
 package dev.fjimb.forum.categoria;
 
-import java.text.Normalizer;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dev.fjimb.forum.categoria.CategoriaDtos.CategoriaResponse;
 import dev.fjimb.forum.categoria.CategoriaDtos.CrearCategoriaRequest;
+import dev.fjimb.forum.common.Slugs;
 
 @Service
 public class CategoriaService {
@@ -25,18 +25,11 @@ public class CategoriaService {
 	
 	@Transactional
 	public CategoriaResponse crear(CrearCategoriaRequest req) {
-		String slug = slugify(req.nombre());
+		String slug = Slugs.of(req.nombre());
 		if (repo.existsBySlug(slug)) {
 			throw new IllegalArgumentException("La categoria ya existe");
 		}
 		return CategoriaResponse.from(repo.save(new Categoria(req.nombre().trim(), slug)));
 	}
 	
-	private static String slugify(String texto) {
-		return Normalizer.normalize(texto, Normalizer.Form.NFD)
-				.replaceAll("\\p{M}", "")
-				.toLowerCase()
-				.replaceAll("[^a-z0-9]+", "-")
-				.replaceAll("(^-|-$)", "");
-	}
 }
